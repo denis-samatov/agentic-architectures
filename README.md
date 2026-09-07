@@ -6,21 +6,25 @@
 
 This repository contains educational implementations of **23 agent architecture patterns**, built primarily with LangChain and LangGraph. It is a living, hands-on reference that connects design concepts with runnable notebook examples.
 
-## 📖 Why this repository?
+## 📖 Start with three notebooks
 
-The field of AI agents is evolving at an incredible pace, but many resources remain abstract and theoretical. This project was created to provide a structured, practical, and deeply educational path for developers, researchers, and AI enthusiasts to master the art of building intelligent systems.
+These are educational examples. They demonstrate orchestration choices and expose intermediate state; they do not establish production readiness or autonomous reliability.
 
--   **From theory to tangible code:** Every architecture is not just explained, but implemented end to end in a runnable Jupyter notebook.
--   **A structured learning path:** The notebooks are ordered to build concepts progressively, from foundational patterns to highly advanced, multi-agent, and self-aware systems.
--   **A focus on evaluation:** Several notebooks demonstrate `LLM-as-a-Judge` as one model-based evaluation signal. These scores are repeatable under fixed settings but are not objective ground truth and should be combined with task-specific checks and human review.
--   **Real-world scenarios:** Examples are grounded in practical applications — financial analysis, coding, social media management, medical triage — making the concepts immediately applicable.
--   **A consistent orchestration framework:** LangGraph is used as the primary orchestrator for stateful and cyclical examples.
+| Order | Notebook | Services/keys used by the current code | What to inspect |
+| --- | --- | --- | --- |
+| 1 | [Reflection](notebooks/01_reflection.ipynb) | Nebius and LangSmith (`NEBIUS_API_KEY`, `LANGCHAIN_API_KEY`) | Initial draft, critique, refined code, and model-based scores. Check the code separately; a judge score is not a correctness test. |
+| 2 | [Tool Use](notebooks/02_tool_use.ipynb) | Nebius, LangSmith, and Tavily (`TAVILY_API_KEY`) | Tool-call messages, search results, and the final answer. Check citations against returned sources. |
+| 3 | [Dry-Run Harness](notebooks/14_dry_run.ipynb) | Nebius and LangSmith; interactive console input | Proposed action, dry-run preview, and approve/reject branch. The social API is mocked, including its “live” branch. |
+
+Copy `.env.example` to `.env` and configure only the services used by the notebook you choose. Keys belong in the local environment. Model calls and search can incur provider costs; model availability and returned text depend on the provider. The notebooks have not been re-executed with live provider credentials for this documentation update.
+
+LLM-as-a-judge scores are model-based signals, not objective ground truth. Fixed settings help comparison but do not guarantee identical outputs. Compare a simple baseline, inspect failures, and add task-specific checks before adapting a pattern to an application.
 
 ---
 
 ## 🏛️ Architectures: A Deep Dive
 
-This collection covers the full spectrum of modern agent design, from single-agent enhancements to complex, interacting, and self-improving systems.
+The table maps each notebook to the orchestration pattern it illustrates. Use cases are learning scenarios, not validated deployment claims.
 
 | # | Architecture | Core Concept / TL;DR | Key Use Case | Notebook |
 |:---:|---|---|---|:---:|
@@ -52,7 +56,7 @@ This collection covers the full spectrum of modern agent design, from single-age
 
 ## 🗺️ A Tour of the Architectures
 
-The repository is structured to walk you from simple enhancements to building truly complex, multi-agent, self-aware systems.
+The repository is structured to walk you from simple enhancements to building stateful workflows, multi-agent coordination, and model-based self-critique.
 
 <details>
 <summary><b>Click to expand the learning path</b></summary>
@@ -78,11 +82,11 @@ This section focuses on how agents can think more deeply and remember what they'
 - **Tree of Thoughts** provides systematic, multi-path exploration for solving hard logical problems.
 
 #### Part 4: Safety, Reliability, and Real-World Interaction (Notebooks 6, 10, 14, 17)
-These architectures are critical for building agents that can be trusted in production.
+These notebooks illustrate reliability controls that need independent testing in an actual application.
 - **Dry-Run Harness** provides a critical human-in-the-loop safety layer.
 - **Simulator** lets an agent "think before it acts" by modeling consequences.
 - **PEV** builds in automatic error detection and recovery.
-- The **Metacognitive** agent understands its own limitations, which is key to safe operation in high-stakes domains.
+- The **Metacognitive** example asks a model to assess whether to act, use a tool, or escalate; that assessment can be wrong.
 
 #### Part 5: Learning and Adaptation (Notebooks 15, 16)
 The final section explores how agents can improve over time and solve problems in new ways.
@@ -116,7 +120,7 @@ graph TD
 
 ## 🛠️ Tech Stack and Setup
 
-This project uses a modern, powerful stack for building sophisticated AI applications.
+The notebooks use the following libraries and external services.
 
 | Component | Purpose |
 |---|---|
@@ -169,7 +173,7 @@ You may also need to install `pygraphviz` to visualize LangGraph graphs.
 
 ### 4. Configure environment variables
 
-The agents need API keys to run. Create a file named `.env` in the project root. You can look at `requirements.txt` to see what's needed, then build your own `.env` file.
+Copy `.env.example` to `.env` in the project root. Use the Start here table and the notebook's `setup_environment(required_keys=...)` call to identify required credentials; `requirements.txt` lists Python packages, not credentials.
 
 Open the `.env` file and add your credentials. It should look like this:
 
@@ -196,7 +200,7 @@ NEO4J_PASSWORD="your_neo4j_password_here"
 
 ### 5. Run the notebooks
 
-You can now start Jupyter and explore the notebooks in numerical order.
+Start Jupyter, select one of the three entry notebooks above, and run its cells in order. Restart the kernel between notebooks. The dry-run harness requires interactive approve/reject input.
 
 ```bash
 jupyter notebook
