@@ -1,0 +1,5 @@
+-r requirements.txt
+beautifulsoup4
+langchain-huggingface
+langchain-text-splitters
+sentence-transformers
