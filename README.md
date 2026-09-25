@@ -161,15 +161,29 @@ python -m venv venv
 
 ### 3. Install dependencies
 
-Install all required Python packages from `requirements.txt`.
+Install the base Python packages from `requirements.txt`.
 
 ```bash
 pip install -r requirements.txt
 ```
 
+Notebook [21, RAG Pipeline](notebooks/21_rag_pipeline.ipynb), also needs a
+web-page parser and local Hugging Face embeddings. Install its extra packages
+only if you plan to run that notebook:
+
+```bash
+pip install -r requirements-rag.txt
+```
+
+That notebook fetches a web page, downloads an embedding model on first use,
+and calls the configured LLM. Its results require network access and are not
+reproduced by the repository's JSON/lint CI checks.
+
 You may also need to install `pygraphviz` to visualize LangGraph graphs.
 
-> **Note:** `requirements.txt` is the authoritative dependency list — install from it as shown above. `pyproject.toml` in this repo only configures `ruff` (linting/formatting) and declares no dependencies or build metadata.
+> **Note:** `requirements.txt` lists the base dependencies and
+> `requirements-rag.txt` adds notebook 21's dependencies. `pyproject.toml` only
+> configures `ruff`; it declares no dependencies or build metadata.
 
 ### 4. Configure environment variables
 
