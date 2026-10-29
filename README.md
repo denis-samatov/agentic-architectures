@@ -42,7 +42,7 @@ The table maps each notebook to the orchestration pattern it illustrates. Use ca
 | **12** | **Graph (World-Model Memory)** | Stores knowledge as a structured graph of entities and relationships, enabling complex, multi-step reasoning. | Enterprise intelligence, Advanced research | [12_graph.ipynb](./notebooks/12_graph.ipynb) |
 | **13** | **Ensemble** | Several independent agents analyze a problem from different perspectives, and a final "aggregator" agent synthesizes their conclusions. | High-stakes decision support, Fact-checking | [13_ensemble.ipynb](./notebooks/13_ensemble.ipynb) |
 | **14** | **Dry-Run Harness** | A safety pattern in which an agent's proposed action is first simulated (dry run) and must be approved before execution. | Deploying agents to production, Debugging | [14_dry_run.ipynb](./notebooks/14_dry_run.ipynb) |
-| **15** | **RLHF (Self-Improvement)** | An agent's output is critiqued by an "editor," and the feedback is used for refinement. The best results are kept for training. | High-quality content generation, Continuous learning | [15_RLHF.ipynb](./notebooks/15_RLHF.ipynb) |
+| **15** | **Self-Refinement with Examples** | An agent's output is critiqued by an "editor," and the feedback is used for refinement. The best results are kept for training. | High-quality content generation, Continuous learning | [15_RLHF.ipynb](./notebooks/15_RLHF.ipynb) |
 | **16** | **Cellular Automata** | A system of simple, decentralized agents whose local interactions produce complex, emergent global behavior. | Spatial reasoning, Logistics, Complex-system simulation | [16_cellular_automata.ipynb](./notebooks/16_cellular_automata.ipynb) |
 | **17** | **Reflexive Metacognitive** | An agent with a "self-model" that reasons about its own capabilities, choosing between acting, using a tool, or escalating to a human. | High-stakes consultation (medicine, law, finance) | [17_reflexive_metacognitive.ipynb](./notebooks/17_reflexive_metacognitive.ipynb) |
 | **18** | **Replan Dynamic** | A Plan-Execute-Observe loop with dynamic replanning and deep result analysis to adapt to failures. | Working with unreliable tools, Adaptive workflows | [18_replan_dynamic.ipynb](./notebooks/18_replan_dynamic.ipynb) |
@@ -199,7 +199,7 @@ NEBIUS_API_KEY="your_nebius_api_key_here"
 
 # LangSmith API Key (for tracing and debugging)
 LANGCHAIN_API_KEY="your_langsmith_api_key_here"
-LANGCHAIN_TRACING_V2="true"
+LANGCHAIN_TRACING_V2="false"
 LANGCHAIN_PROJECT="All-Agentic-Architectures" # Optional: set a project name
 
 # Tavily Search API Key (for the research agent's tool)
@@ -219,3 +219,9 @@ Start Jupyter, select one of the three entry notebooks above, and run its cells 
 ```bash
 jupyter notebook
 ```
+
+## Offline semantic regression tests
+
+Install `requirements-test.txt` and run `PYTHONPATH=. pytest tests/ -q`. Tests execute the original pure notebook definitions with deterministic graph/LLM fixtures, without provider calls, Neo4j, model downloads or keys. They cover full-state runner results, selecting the memory-aware graph, exact Game24 arithmetic and multiset validation, false judge/text success and local environment/diagram controls. This is narrower than a live replay of all notebooks. Historical embedded outputs are not new validation results.
+
+Tracing is opt-in: set `LANGCHAIN_TRACING_V2=true` only when you intend to transmit traces to LangSmith. Explicit required keys must be nonempty. Graph rendering is local by default; `visualize_graph(..., allow_remote=True)` explicitly opts into remote Mermaid rendering. Notebook 15 demonstrates self-refinement and an in-memory example store, not preference training/RLHF or durable learned parameters. Notebook 23 is a model-based policy demonstration, not a security boundary. LATS and the baseline use the same deterministic Game24 oracle; a judge score alone cannot mark success.
