@@ -32,14 +32,13 @@ def setup_environment(project_name: str, required_keys: Optional[List[str]] = No
     else:
          console.print("[yellow]Warning:[/yellow] .env file not found in parent directory or current directory.")
     
-    os.environ["LANGCHAIN_TRACING_V2"] = "true"
+    os.environ.setdefault("LANGCHAIN_TRACING_V2", "false")
     os.environ["LANGCHAIN_PROJECT"] = project_name
     
     if required_keys:
-        missing_keys = [key for key in required_keys if key not in os.environ]
+        missing_keys = [key for key in required_keys if not os.environ.get(key, "").strip()]
         if missing_keys:
-            console.print(f"[bold red]Warning:[/bold red] Missing environment variables: {', '.join(missing_keys)}")
-            console.print("Please create a .env file in the project root with these keys.")
+            raise ValueError(f"Missing required environment variables: {', '.join(missing_keys)}")
     else:
         # Default check for Nebius and LangChain as they are used almost everywhere
         if not os.environ.get("NEBIUS_API_KEY"):
@@ -50,11 +49,11 @@ def setup_environment(project_name: str, required_keys: Optional[List[str]] = No
     console.print(Panel(f"[green]Environment setup for '{project_name}' complete.[/green]", title="Setup", border_style="green"))
     return console
 
-def visualize_graph(app, console: "Console"):
+def visualize_graph(app, console: "Console", *, allow_remote: bool = False):
     """
     Visualizes the LangGraph application graph.
-    Tries to draw using PyGraphviz (fast, local), falling back to Mermaid API (slower, remote),
-    and finally Mermaid syntax.
+    Tries local PyGraphviz, then local Mermaid syntax. Remote Mermaid rendering
+    is available only with allow_remote=True.
     """
     # Lazy import to reduce startup time for notebooks not using visualization
     from IPython.display import Image, display
@@ -71,13 +70,14 @@ def visualize_graph(app, console: "Console"):
     except Exception:
         pass # Fallback
 
-    # Try drawing with Mermaid API (usually best quality but requires network/external tool)
-    try:
-        png_image = graph.draw_mermaid_png()
-        display(Image(png_image))
-        return
-    except Exception:
-        pass # Fallback
+    # Remote rendering sends the diagram to a third-party service; explicit opt-in only.
+    if allow_remote:
+        try:
+            png_image = graph.draw_mermaid_png()
+            display(Image(png_image))
+            return
+        except Exception:
+            pass
 
     # Fallback to syntax
     console.print(Panel(

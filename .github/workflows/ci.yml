@@ -31,3 +31,11 @@ jobs:
               json.load(open(f, encoding='utf-8'))
               print(f'OK: {f}')
           "
+
+      - name: Install offline test dependencies
+        run: pip install -r requirements-test.txt
+
+      - name: Run offline semantic regression tests
+        env:
+          PYTHONPATH: .
+        run: pytest tests/ -q

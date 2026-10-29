@@ -1,0 +1,6 @@
+# Tested locally on Python 3.13.5; execution profile, not a cross-platform lock.
+pytest==9.2.0
+langgraph==1.1.10
+rich==13.9.4
+python-dotenv==1.0.1
+ipython==8.30.0
