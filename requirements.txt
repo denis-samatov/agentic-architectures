@@ -1,9 +1,9 @@
 langchain
-langgraph>=1.1.10,<2
-langgraph-sdk>=0.4.4,<0.5
+langgraph>=1.2.18,<2
+langgraph-sdk>=0.4.10,<0.5
 langchain-nebius
 rich
-python-dotenv>=1.2.2,<2
+python-dotenv>=1.2.4,<2
 langchain-community
 langchain-tavily
 numpy
